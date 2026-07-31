@@ -56,7 +56,9 @@ ExpenseSync/
 - Confirm `go.mod` exists and contains the module name.
 - Confirm `go.sum` exists and is not empty.
 
-**Status**: `[ ]` Not started
+**Note**: `echo v4.15.4` requires Go >= 1.25.0. The `go get` command upgraded the module from `go 1.22.2` to `go 1.25.0` automatically. This is expected.
+
+**Status**: `[x]` Complete
 
 ---
 
