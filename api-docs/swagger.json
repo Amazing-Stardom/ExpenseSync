@@ -1,0 +1,341 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A smart REST API for managing personal expenses",
+        "title": "ExpenseSync API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Support",
+            "email": "support@expensesync.io"
+        },
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/expenses": {
+            "get": {
+                "description": "Retrieve all expenses with optional filtering by category or title search",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "Get all expenses",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by category",
+                        "name": "category",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by title",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/expense.Expense"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a new expense to the tracker",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "Create new expense",
+                "parameters": [
+                    {
+                        "description": "Expense details",
+                        "name": "expense",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/expense.CreateExpenseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/expense.Expense"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/expense.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/expenses/category/{category}/total": {
+            "get": {
+                "description": "Calculate total expenses for a specific category",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "calculations"
+                ],
+                "summary": "Get category total",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category name",
+                        "name": "category",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/expense.CategoryTotal"
+                        }
+                    }
+                }
+            }
+        },
+        "/expenses/totals": {
+            "get": {
+                "description": "Calculate overall total of all expenses",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "calculations"
+                ],
+                "summary": "Get total expenses",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "integer",
+                                "format": "int64"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/expenses/{id}": {
+            "get": {
+                "description": "Retrieve a specific expense by its unique ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "Get expense by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Expense ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/expense.Expense"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/expense.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/expense.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove an expense by its unique ID",
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "Delete expense",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Expense ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/expense.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/expense.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/summary/monthly": {
+            "get": {
+                "description": "Get total expenses grouped by month and category",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "analytics"
+                ],
+                "summary": "Get monthly summary",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/expense.MonthlySummary"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "expense.CategoryTotal": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "example": "food"
+                },
+                "total": {
+                    "type": "integer",
+                    "example": 15075
+                }
+            }
+        },
+        "expense.CreateExpenseRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "category",
+                "date",
+                "title"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "expense.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Invalid input"
+                }
+            }
+        },
+        "expense.Expense": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer",
+                    "example": 2550
+                },
+                "category": {
+                    "type": "string",
+                    "example": "food"
+                },
+                "date": {
+                    "type": "string",
+                    "example": "2026-08-01T00:00:00Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Lunch at restaurant"
+                }
+            }
+        },
+        "expense.MonthlySummary": {
+            "type": "object",
+            "properties": {
+                "by_category": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "month": {
+                    "type": "string",
+                    "example": "2026-08"
+                },
+                "total": {
+                    "type": "integer",
+                    "example": 50000
+                }
+            }
+        }
+    }
+}
