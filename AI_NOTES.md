@@ -330,4 +330,40 @@ This section records what was built in each phase, decisions made during impleme
 
 ---
 
+### Phase 7 — Docker (`Dockerfile`, `docker-compose.yml`)
+
+**Date**: 2026-08-01
+
+**What was done**:
+- Created multi-stage `Dockerfile` with `golang:1.25-alpine` builder and pinned `alpine:3.20` runtime.
+- Created `docker-compose.yml` exposing port `8080` and passing environment variables.
+- Configured lowercase image tag `expensesync:latest` per Docker naming rules.
+
+**Implementation decision**: Used multi-stage Docker build to optimize final container image size and pinned runtime image to `alpine:3.20` for build reproducibility.
+
+---
+
+### Phase 8 & 9 — Test Suite & Submission README (`tests/`, `README.md`)
+
+**Date**: 2026-08-01
+
+**What was done**:
+- Implemented comprehensive automated test suite in `tests/expense_test.go` covering storage unit tests and HTTP handler integration tests.
+- Created submission `README.md` documenting installation, running server, running tests, API endpoints, Swagger UI links, and Docker usage.
+
+---
+
+### Phase 10 — Project Final Sign-Off
+
+**Date**: 2026-08-01
+
+**Final Status**:
+- **Code Compilation**: `go build` compiles cleanly with exit code 0.
+- **Automated Tests**: All 7 unit and integration test suites pass (`make test`).
+- **OpenAPI / Swagger**: OpenAPI spec generated in `api-docs/` (`make swagger`), accessible via `/swagger/index.html`, `/api`, and `/docs`.
+- **Live Reloading**: `make run` configured with Go Air watcher.
+- **Submission Requirements**: `README.md`, `AI_NOTES.md`, `src/`, `tests/`, `api-docs/`, and `Makefile` complete and verified.
+
+---
+
 *Last Updated: August 2026*

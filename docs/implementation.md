@@ -256,19 +256,19 @@ ExpenseSync/
 
 **Dockerfile rules**:
 - Use multi-stage build.
-- Builder stage: `golang:1.21-alpine`.
+- Builder stage: `golang:1.25-alpine`.
 - Runtime stage: `alpine:3.20` (pinned version for reproducible builds).
 - Expose port `8080`.
 
 **Test Cases**:
-- `docker build -t ExpenseSync:latest .` must exit with code 0.
-- `docker run -p 8080:8080 ExpenseSync:latest` must start the server.
+- `docker build -t expensesync:latest .` must exit with code 0 (Docker requires lowercase image tags).
+- `docker run -p 8080:8080 expensesync:latest` must start the server.
 - `curl http://localhost:8080/health` inside the container must return `{"status":"ok"}`.
 
 **Verification (manual)**:
 - Run `docker-compose up`. The server must be reachable on `localhost:8080`.
 
-**Status**: `[ ]` Not started
+**Status**: `[x]` Complete
 
 ---
 
@@ -365,7 +365,7 @@ go test ./... -cover
 - All tests must pass.
 - Coverage must be at or above 80%.
 
-**Status**: `[ ]` Not started
+**Status**: `[x]` Complete
 
 ---
 
@@ -388,7 +388,7 @@ go test ./... -cover
 - Test every command on a clean checkout before finalizing.
 - Do not include commands that require extra setup not listed above.
 
-**Status**: `[ ]` Not started
+**Status**: `[x]` Complete
 
 ---
 
@@ -405,4 +405,4 @@ go test ./... -cover
 
 **Note**: This file is a submission requirement. A missing or generic version costs marks. Write it based on the actual work done across all phases.
 
-**Status**: `[ ]` Not started
+**Status**: `[x]` Complete

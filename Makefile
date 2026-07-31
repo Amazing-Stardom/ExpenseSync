@@ -20,10 +20,10 @@ build:
 	go build -o expensesync main.go
 
 docker-build:
-	docker build -t ExpenseSync:latest .
+	docker build -t expensesync:latest .
 
 docker-run:
-	docker run -p 8080:8080 ExpenseSync:latest
+	docker run -p 8080:8080 expensesync:latest
 
 docker-up:
 	docker-compose up --build
